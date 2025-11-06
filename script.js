@@ -151,38 +151,12 @@ const translations = {
   },
 };
 
-const storage = (() => {
-  try {
-    if (typeof window === 'undefined' || !window.localStorage) {
-      throw new Error('localStorage unavailable');
-    }
-    const testKey = '__numberGames__';
-    window.localStorage.setItem(testKey, testKey);
-    window.localStorage.removeItem(testKey);
-    return window.localStorage;
-  } catch (err) {
-    console.warn('Local storage unavailable, falling back to memory.', err);
-    const memory = new Map();
-    return {
-      getItem(key) {
-        return memory.has(key) ? memory.get(key) : null;
-      },
-      setItem(key, value) {
-        memory.set(key, String(value));
-      },
-      removeItem(key) {
-        memory.delete(key);
-      },
-    };
-  }
-})();
-
 const storageKey = 'numberGamesHistory';
 
 const historyStore = {
   read() {
     try {
-      const raw = storage.getItem(storageKey);
+      const raw = localStorage.getItem(storageKey);
       if (!raw) return [];
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed : [];
@@ -197,7 +171,7 @@ const historyStore = {
       ? crypto.randomUUID()
       : `${Date.now()}-${Math.random()}`;
     list.unshift({ ...entry, id, date: new Date().toISOString() });
-    storage.setItem(storageKey, JSON.stringify(list.slice(0, 100)));
+    localStorage.setItem(storageKey, JSON.stringify(list.slice(0, 100)));
   },
 };
 
@@ -243,8 +217,8 @@ class Timer {
 }
 
 const state = {
-  language: storage.getItem('numberGamesLang') || 'zh',
-  background: storage.getItem('numberGamesBg') || '#f5f1e8',
+  language: localStorage.getItem('numberGamesLang') || 'zh',
+  background: localStorage.getItem('numberGamesBg') || '#f5f1e8',
 };
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -432,7 +406,7 @@ const app = {
 
     this.languageSelect.addEventListener('change', (e) => {
       this.applyLanguage(e.target.value);
-      storage.setItem('numberGamesLang', state.language);
+      localStorage.setItem('numberGamesLang', state.language);
       this.refreshTexts();
     });
 
@@ -440,7 +414,7 @@ const app = {
       btn.addEventListener('click', () => {
         const color = btn.dataset.color;
         this.applyBackground(color);
-        storage.setItem('numberGamesBg', color);
+        localStorage.setItem('numberGamesBg', color);
         $$('.color-swatch').forEach((sw) => sw.classList.toggle('active', sw === btn));
       });
     });
@@ -1044,7 +1018,7 @@ const app = {
     let gameOver = false;
     let announcedWin = false;
 
-    let bestScore = parseInt(storage.getItem(bestKey), 10);
+    let bestScore = parseInt(localStorage.getItem(bestKey), 10);
     if (Number.isNaN(bestScore)) bestScore = 0;
     bestEl.textContent = String(bestScore);
 
@@ -1063,7 +1037,7 @@ const app = {
       if (score > bestScore) {
         bestScore = score;
         bestEl.textContent = String(bestScore);
-        storage.setItem(bestKey, String(bestScore));
+        localStorage.setItem(bestKey, String(bestScore));
         if (!gameOver && !announcedWin) {
           message.textContent = this.t('game2048NewBest');
         }
