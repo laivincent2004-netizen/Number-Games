@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Number Games</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="top-bar">
+      <h1 class="app-title" data-i18n="appName">Number Games</h1>
+      <div class="menu">
+        <button id="menuButton" aria-haspopup="true" aria-controls="menuPanel">☰</button>
+        <div id="menuPanel" class="menu-panel" role="menu">
+          <div class="menu-section">
+            <label for="languageSelect" data-i18n="language">Language</label>
+            <select id="languageSelect">
+              <option value="en">English</option>
+              <option value="zh">中文</option>
+            </select>
+          </div>
+          <div class="menu-section">
+            <span data-i18n="background">Background</span>
+            <div class="color-options">
+              <button class="color-swatch" data-color="#f5f1e8" style="background:#f5f1e8"></button>
+              <button class="color-swatch" data-color="#dde7f0" style="background:#dde7f0"></button>
+              <button class="color-swatch" data-color="#e9f5f5" style="background:#e9f5f5"></button>
+              <button class="color-swatch" data-color="#143642" style="background:#143642"></button>
+              <button class="color-swatch" data-color="#1f2833" style="background:#1f2833"></button>
+            </div>
+          </div>
+          <button id="historyButton" class="menu-action" data-i18n="history">History</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="viewContainer" class="view-container"></main>
+  </div>
+
+  <template id="homeTemplate">
+    <section class="home">
+      <h2 data-i18n="chooseGame">Choose a Game</h2>
+      <div class="game-grid">
+        <button class="game-card" data-view="twentyFour"><span data-i18n="game24">24 Game</span></button>
+        <button class="game-card" data-view="sudoku"><span data-i18n="sudoku">Sudoku</span></button>
+        <button class="game-card" data-view="game2048"><span data-i18n="game2048">2048</span></button>
+        <button class="game-card" data-view="minesweeper"><span data-i18n="minesweeper">Minesweeper</span></button>
+        <button class="game-card" data-view="crossmath"><span data-i18n="crossmath">Crossmath</span></button>
+        <button class="game-card" data-view="fillBlocks"><span data-i18n="fillBlocks">Fill Blocks</span></button>
+      </div>
+    </section>
+  </template>
+
+  <template id="twentyFourSelectTemplate">
+    <section class="panel">
+      <h2 data-i18n="game24">24 Game</h2>
+      <p data-i18n="selectMode24">Select a mode to begin.</p>
+      <div class="button-group">
+        <button data-mode="ten" class="primary" data-i18n="modeTen">Numbers within 10</button>
+        <button data-mode="cards" class="primary" data-i18n="modeCards">Cards A-K</button>
+      </div>
+      <button class="secondary" data-action="back" data-i18n="back">Back</button>
+    </section>
+  </template>
+
+  <template id="twentyFourGameTemplate">
+    <section class="panel">
+      <div class="panel-header">
+        <button class="secondary" data-action="exit" data-i18n="exit">Exit</button>
+        <div class="panel-info">
+          <span data-i18n="timer">Timer</span>: <span class="timer" data-role="timer">00:00</span>
+        </div>
+      </div>
+      <div class="cards-grid" data-role="cards"></div>
+      <div class="expression-display" data-role="expression"></div>
+      <div class="controls">
+        <div class="buttons-row" data-role="numbers"></div>
+        <div class="buttons-row operators">
+          <button data-value="+">+</button>
+          <button data-value="-">-</button>
+          <button data-value="*">×</button>
+          <button data-value="/">÷</button>
+          <button data-value="(">(</button>
+          <button data-value=")">)</button>
+        </div>
+        <div class="buttons-row actions">
+          <button class="secondary" data-action="undo" data-i18n="undo">Undo</button>
+          <button class="secondary" data-action="clear" data-i18n="clear">Clear</button>
+          <button class="primary" data-action="submit" data-i18n="submit">Submit</button>
+        </div>
+      </div>
+      <div class="message" data-role="message"></div>
+    </section>
+  </template>
+
+  <template id="sudokuSelectTemplate">
+    <section class="panel">
+      <h2 data-i18n="sudoku">Sudoku</h2>
+      <p data-i18n="selectDifficulty">Select difficulty.</p>
+      <div class="button-group">
+        <button class="primary" data-difficulty="easy" data-i18n="easy">Easy</button>
+        <button class="primary" data-difficulty="normal" data-i18n="normal">Normal</button>
+        <button class="primary" data-difficulty="hard" data-i18n="hard">Hard</button>
+        <button class="primary" data-difficulty="inferno" data-i18n="inferno">Inferno</button>
+      </div>
+      <button class="secondary" data-action="back" data-i18n="back">Back</button>
+    </section>
+  </template>
+
+  <template id="sudokuGameTemplate">
+    <section class="panel sudoku-panel">
+      <div class="panel-header">
+        <button class="secondary" data-action="exit" data-i18n="exit">Exit</button>
+        <div class="panel-info">
+          <span data-i18n="timer">Timer</span>: <span class="timer" data-role="timer">00:00</span>
+          <span data-i18n="hints">Hints</span>: <span data-role="hints">3</span>
+        </div>
+      </div>
+      <div class="sudoku-grid" data-role="grid"></div>
+      <div class="sudoku-controls">
+        <button class="secondary" data-action="note" data-i18n="noteMode">Note Mode</button>
+        <div class="numbers">
+          <button data-value="1">1</button>
+          <button data-value="2">2</button>
+          <button data-value="3">3</button>
+          <button data-value="4">4</button>
+          <button data-value="5">5</button>
+          <button data-value="6">6</button>
+          <button data-value="7">7</button>
+          <button data-value="8">8</button>
+          <button data-value="9">9</button>
+        </div>
+        <div class="actions">
+          <button class="secondary" data-action="erase" data-i18n="erase">Erase</button>
+          <button class="secondary" data-action="hint" data-i18n="hint">Hint</button>
+        </div>
+      </div>
+      <div class="message" data-role="message"></div>
+    </section>
+  </template>
+
+  <template id="minesweeperSelectTemplate">
+    <section class="panel">
+      <h2 data-i18n="minesweeper">Minesweeper</h2>
+      <p data-i18n="selectDifficulty">Select difficulty.</p>
+      <div class="button-group">
+        <button class="primary" data-difficulty="easy" data-i18n="easy">Easy</button>
+        <button class="primary" data-difficulty="normal" data-i18n="normal">Normal</button>
+        <button class="primary" data-difficulty="hard" data-i18n="hard">Hard</button>
+      </div>
+      <button class="secondary" data-action="back" data-i18n="back">Back</button>
+    </section>
+  </template>
+
+  <template id="minesweeperGameTemplate">
+    <section class="panel mines-panel">
+      <div class="panel-header">
+        <button class="secondary" data-action="exit" data-i18n="exit">Exit</button>
+        <div class="panel-info">
+          <span data-i18n="timer">Timer</span>: <span class="timer" data-role="timer">00:00</span>
+        </div>
+        <button class="secondary" data-action="pause" data-i18n="pause">Pause</button>
+      </div>
+      <div class="mines-grid" data-role="grid"></div>
+      <div class="message" data-role="message"></div>
+    </section>
+  </template>
+
+  <template id="game2048Template">
+    <section class="panel game-2048">
+      <div class="panel-header">
+        <button class="secondary" data-action="exit" data-i18n="exit">Exit</button>
+        <div class="panel-info">
+          <span data-i18n="score">Score</span>: <span data-role="score">0</span>
+          <span data-i18n="best">Best</span>: <span data-role="best">0</span>
+        </div>
+        <button class="secondary" data-action="restart" data-i18n="restart">Restart</button>
+      </div>
+      <div class="grid-2048" data-role="grid"></div>
+      <p class="help" data-i18n="game2048Hint">Use swipe or arrow keys to move tiles.</p>
+      <div class="message" data-role="message"></div>
+    </section>
+  </template>
+
+  <template id="crossmathTemplate">
+    <section class="panel crossmath-panel">
+      <div class="panel-header">
+        <button class="secondary" data-action="exit" data-i18n="exit">Exit</button>
+        <div class="panel-info">
+          <span data-i18n="timer">Timer</span>: <span class="timer" data-role="timer">00:00</span>
+        </div>
+        <button class="secondary" data-action="new" data-i18n="newPuzzle">New Puzzle</button>
+      </div>
+      <p class="help" data-i18n="crossmathInstructions">Fill digits 1-9 so each row and column equation is true.</p>
+      <div class="crossmath-board" data-role="board">
+        <div class="crossmath-grid" data-role="grid"></div>
+        <div class="crossmath-hints">
+          <div class="crossmath-rows" data-role="rows"></div>
+          <div class="crossmath-cols" data-role="cols"></div>
+        </div>
+      </div>
+      <div class="crossmath-actions">
+        <button class="primary" data-action="check" data-i18n="check">Check</button>
+        <button class="secondary" data-action="clear" data-i18n="clear">Clear</button>
+      </div>
+      <div class="message" data-role="message"></div>
+    </section>
+  </template>
+
+  <template id="fillBlocksSelectTemplate">
+    <section class="panel">
+      <h2 data-i18n="fillBlocks">Fill Blocks</h2>
+      <p data-i18n="selectFillBlocksDifficulty">Select grid size.</p>
+      <div class="button-group">
+        <button class="primary" data-size="10">10 × 10</button>
+        <button class="primary" data-size="15">15 × 15</button>
+        <button class="primary" data-size="20">20 × 20</button>
+      </div>
+      <button class="secondary" data-action="back" data-i18n="back">Back</button>
+    </section>
+  </template>
+
+  <template id="fillBlocksGameTemplate">
+    <section class="panel fill-blocks-panel">
+      <div class="panel-header">
+        <button class="secondary" data-action="exit" data-i18n="exit">Exit</button>
+        <div class="panel-info">
+          <span data-i18n="timer">Timer</span>: <span class="timer" data-role="timer">00:00</span>
+        </div>
+        <button class="secondary" data-action="new" data-i18n="newPuzzle">New Puzzle</button>
+      </div>
+      <p class="help" data-i18n="fillBlocksInstructions">Use the clues to fill the grid.</p>
+      <div class="fill-blocks-modes">
+        <button class="secondary active" data-mode="fill" data-i18n="fillModeFill">Fill</button>
+        <button class="secondary" data-mode="mark" data-i18n="fillModeMark">Mark Blank</button>
+      </div>
+      <div class="fill-blocks-wrapper">
+        <div class="fill-blocks-top" data-role="topClues"></div>
+        <div class="fill-blocks-main">
+          <div class="fill-blocks-left" data-role="leftClues"></div>
+          <div class="fill-blocks-grid" data-role="grid"></div>
+        </div>
+      </div>
+      <div class="fill-blocks-actions">
+        <button class="primary" data-action="check" data-i18n="check">Check</button>
+        <button class="secondary" data-action="clear" data-i18n="clearMarks">Clear Marks</button>
+      </div>
+      <div class="message" data-role="message"></div>
+    </section>
+  </template>
+
+  <div class="modal hidden" id="historyModal" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button class="modal-close" id="historyClose">×</button>
+      <h3 data-i18n="history">History</h3>
+      <div id="historyList" class="history-list"></div>
+    </div>
+  </div>
+
+  <script src="script.js" type="module"></script>
+</body>
+</html>
